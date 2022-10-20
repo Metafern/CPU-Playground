@@ -1,0 +1,20 @@
+int a = 4;
+int b = 15;
+
+int c = b + a;
+
+repeat 5 {
+    a = a + 1;
+}
+
+
+print(char* str) {
+    int a = 0;
+    repeat size(str) {
+        int addr = a + 0xFFFF;
+        char val = str[a];
+        *addr = val;
+        a = a + 1;
+    }
+    *(0xFFFF + a) = 0;
+}
