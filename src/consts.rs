@@ -1,5 +1,10 @@
 
 /*
+This instruction set uses a half-word architecture where each instruction can only hold data that is half a word in length
+
+*/
+
+/*
 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0
     [Instruction]  Registers         [  Operand                       ]
 [condition]      [ R1   ][ R2   ]

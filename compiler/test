@@ -1,0 +1,63 @@
+	.text
+	.syntax unified
+	.eabi_attribute	67, "2.09"
+	.cpu	arm7tdmi
+	.eabi_attribute	6, 2
+	.eabi_attribute	8, 1
+	.eabi_attribute	9, 1
+	.eabi_attribute	34, 0
+	.eabi_attribute	17, 1
+	.eabi_attribute	20, 1
+	.eabi_attribute	21, 0
+	.eabi_attribute	23, 3
+	.eabi_attribute	24, 1
+	.eabi_attribute	25, 1
+	.eabi_attribute	38, 1
+	.eabi_attribute	18, 4
+	.eabi_attribute	26, 2
+	.eabi_attribute	14, 0
+	.file	"test.c"
+	.globl	called
+	.p2align	2
+	.type	called,%function
+	.code	32
+called:
+	.fnstart
+	.pad	#12
+	sub	sp, sp, #12
+	mov	r0, #1
+	str	r0, [sp, #8]
+	mov	r0, #5
+	str	r0, [sp, #4]
+	mov	r0, #6
+	str	r0, [sp]
+	add	sp, sp, #12
+	bx	lr
+.Lfunc_end0:
+	.size	called, .Lfunc_end0-called
+	.cantunwind
+	.fnend
+
+	.globl	test
+	.p2align	2
+	.type	test,%function
+	.code	32
+test:
+	.fnstart
+	.save	{r11, lr}
+	push	{r11, lr}
+	.setfp	r11, sp
+	mov	r11, sp
+	bl	called
+	pop	{r11, lr}
+	bx	lr
+.Lfunc_end1:
+	.size	test, .Lfunc_end1-test
+	.cantunwind
+	.fnend
+
+	.ident	"Apple clang version 14.0.0 (clang-1400.0.29.102)"
+	.section	".note.GNU-stack","",%progbits
+	.addrsig
+	.addrsig_sym called
+	.eabi_attribute	30, 6
