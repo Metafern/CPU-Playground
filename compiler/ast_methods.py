@@ -1,8 +1,15 @@
 
+from ctypes.wintypes import WORD
+
+
 global_context = {}
 curr_context = {}
 
+stack_offset = 0
+WORD_SIZE = 4
 curr_instructions = []
+next_register = 0
+#this is all so gross... i gotta redo it all at some point (hopefully sooner rather than later)
 
 def handle_function_decl(ast):
     curr_context = []
@@ -19,18 +26,24 @@ def handle_decl_stmt(ast):
         print(f"WARN: Inner not found in {ast}")
 
 def handle_var_decl(ast):
-    curr_context[ast['id']] = ast
+    global stack_offset
+    curr_context[ast['id']] = {'id': ast['id'], 'offset': stack_offset}
     if 'inner' in ast:
         parse_list(ast['inner'])
     else:
         print(f"WARN: Key not found in {ast['id']}")
-    curr_instructions.append(f"STORE r0, sp")
+    curr_instructions.append(f"PUSH r{next_register}")
+    stack_offset += WORD_SIZE
+
 def handle_integer_literal(ast):
-    curr_instructions.append(f"LOAD {ast['value']}, r0")
+    curr_instructions.append(f"LOAD {ast['value']}, r{next_register}")
 
 def handle_binary_operator(ast):
-    for expr in ast['inner']:
-        pass
+    if 'inner' in ast:
+        parse_list(ast['inner'])
+    else:
+        print(f"WARN: Inner not found in {ast}")
+    
 
 def parse_node(ast):
     match ast['kind']:
@@ -48,8 +61,13 @@ def parse_node(ast):
             handle_var_decl(ast)
         case 'IntegerLiteral':
             handle_integer_literal(ast)
+        case 'BinaryOperator':
+            handle_binary_operator(ast)
+        case 'ImplicitCastExpr':
+            parse_list(ast['inner'])
         case other:
             print(f"Type [{ast['kind']}] not found!")
+            print(curr_instructions)
             exit()
 
 def parse_list(ast):
