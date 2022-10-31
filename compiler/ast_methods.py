@@ -1,6 +1,4 @@
 
-from ctypes.wintypes import WORD
-
 
 global_context = {}
 curr_context = {}
