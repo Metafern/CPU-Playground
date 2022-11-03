@@ -6,6 +6,7 @@ curr_context = {}
 stack_offset = 0
 WORD_SIZE = 4
 curr_instructions = []
+instruction_buffer = []
 next_register = 0
 #this is all so gross... i gotta redo it all at some point (hopefully sooner rather than later)
 
@@ -42,6 +43,11 @@ def handle_binary_operator(ast):
     else:
         print(f"WARN: Inner not found in {ast}")
     
+def handle_call_expr(ast):
+    pass
+
+def handle_decl_ref_expr(ast):
+    pass
 
 def parse_node(ast):
     match ast['kind']:
@@ -63,6 +69,10 @@ def parse_node(ast):
             handle_binary_operator(ast)
         case 'ImplicitCastExpr':
             parse_list(ast['inner'])
+        case 'CallExpr':
+            handle_call_expr(ast)
+        case 'DeclRefExpr':
+            handle_decl_ref_expr(ast)
         case other:
             print(f"Type [{ast['kind']}] not found!")
             print(curr_instructions)
